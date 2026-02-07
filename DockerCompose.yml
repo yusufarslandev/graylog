@@ -1,0 +1,44 @@
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+
+  opensearch:
+    image: opensearchproject/opensearch:2
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - os_data:/usr/share/opensearch/data
+
+  graylog:
+    image: graylog/graylog:6
+    restart: unless-stopped
+    depends_on:
+      - mongo
+      - opensearch
+    environment:
+      - GRAYLOG_PASSWORD_SECRET=${GRAYLOG_PASSWORD_SECRET}
+      - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
+      - GRAYLOG_HTTP_EXTERNAL_URI=${GRAYLOG_HTTP_EXTERNAL_URI}
+      - GRAYLOG_MONGODB_URI=mongodb://mongo:27017/graylog
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://opensearch:9200
+    ports:
+      - "9000:9000"       # Graylog UI
+      - "12201:12201/udp" # GELF UDP (çok kullanılır)
+      - "12201:12201/tcp" # GELF TCP (istersen)
+    volumes:
+      - graylog_journal:/usr/share/graylog/data/journal
+
+volumes:
+  mongo_data:
+  os_data:
+  graylog_journal:
