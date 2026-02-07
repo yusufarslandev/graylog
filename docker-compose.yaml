@@ -38,6 +38,10 @@ services:
     volumes:
       - graylog_journal:/usr/share/graylog/data/journal
 
+networks:
+  graylog:
+    driver: bridge
+    
 volumes:
   mongo_data:
   os_data:
