@@ -30,7 +30,7 @@ services:
       - GRAYLOG_ROOT_PASSWORD_SHA2=${GRAYLOG_ROOT_PASSWORD_SHA2}
       - GRAYLOG_HTTP_EXTERNAL_URI=${GRAYLOG_HTTP_EXTERNAL_URI}
       - GRAYLOG_MONGODB_URI=mongodb://mongo:27017/graylog
-      - GRAYLOG_ELASTICSEARCH_HOSTS=http://opensearch:9200
+      - GRAYLOG_ELASTICSEARCH_HOSTS=http://opensearch-icg00sg0kg8sos08ksowocko-215559740041:9200
     ports:
       - "9000:9000"       # Graylog UI
       - "12201:12201/udp" # GELF UDP (çok kullanılır)
